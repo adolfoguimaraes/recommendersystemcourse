@@ -7,6 +7,8 @@ from flask import render_template
 from db.models import Users, Movies, Ratings, MoviesIMDb
 from db.database import db_session
 
+from scripts.recommender import collaborative_filtering
+
 
 app = Flask(__name__)
 
@@ -67,7 +69,7 @@ def recommender_page(user_id):
 
     watched_user = get_movies_by_user(user_id)
 
-    collaborative_recommender = []
+    collaborative_recommender = collaborative_filtering(user_id)
 
     args = {
         'user_id': user_id,

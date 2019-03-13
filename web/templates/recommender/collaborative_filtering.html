@@ -1,30 +1,33 @@
 {% if args['collaborative_recommender']|length == 0 %}
     <p>No movies found.</p>
 {% else %}
-<div class="col-md-2 w3l-movie-gride-agile">
-    <a href="single.html" class="hvr-shutter-out-horizontal"><img src="images/m15.jpg" title="album-name" class="img-responsive" alt=" " />
+{% for movie in args['collaborative_recommender'] %}
+<div class="col-md-2 w3l-movie-gride-agile" style="text-align: center;">
+    <a href="single.html" class="hvr-shutter-out-horizontal"><img src="{{ movie['image_url'] }}" title="album-name" class="img-responsive" alt=" " />
         <div class="w3l-action-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></div>
     </a>
     <div class="mid-1 agileits_w3layouts_mid_1_home">
         <div class="w3l-movie-text">
-            <h6><a href="single.html">God’s Compass</a></h6>
+            <h6><a href="single.html">{{ movie['title'] }}</a></h6>
         </div>
         <div class="mid-2 agile_mid_2_home">
-            <p>2016</p>
+            <p>{{ movie['year'] }}</p>
             <div class="block-stars">
                 <ul class="w3l-ratings">
-                    <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
-                    <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a></li>
+                    {% for value in movie['rating_star'] %}
+                        {% if value == 1.0 %}
+                            <li><a href="#"><i class="fa fa-star" aria-hidden="true"></i></a></li>
+                        {% elif value == 0.5 %}
+                            <li><a href="#"><i class="fa fa-star-half-o" aria-hidden="true"></i></a></li>
+                        {% else %}
+                            <li><a href="#"><i class="fa fa-star-o" aria-hidden="true"></i></a></li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
             </div>
             <div class="clearfix"></div>
         </div>
     </div>
-    <div class="ribben">
-        <p>NEW</p>
-    </div>
 </div>
+{% endfor %}
 {% endif %}
