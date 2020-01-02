@@ -6,6 +6,7 @@ from db.database import db_session
 
 from scripts import utils
 
+
 def get_topneighbors_rateditem(id_user, id_movie, N):
 
     """
@@ -62,23 +63,24 @@ def predict_rating(id_user, id_movie):
 
         rating_user_u = utils.get_rating_by_user_movie(user_u, id_movie)
         items_rated_by_user_u = utils.get_movies_by_user(user_u)
+
         items_rated_by_user_u_values = [items_rated_by_user_u[x] for x in items_rated_by_user_u]
 
         mean_user_u = np.mean(items_rated_by_user_u_values)
 
-        sum_ += similarity*(rating_user_u - mean_user_u)
+        sum_ += similarity * (rating_user_u - mean_user_u)
 
         sum_k += abs(similarity)
 
-    if sum_k  == 0:
+    if sum_k == 0:
         k = 0
     else:
         k = 1 / sum_k
 
     final_rating = mean_user + k * sum_
 
-
     return final_rating
+
 
 def recommender_list(user):
 
@@ -87,12 +89,15 @@ def recommender_list(user):
 
     all_movies_not_rated = list(all_movies - all_movies_user)
 
+    print("Generating recommeder to %i movies." % len(all_movies_not_rated))
+
     predict = {}
 
-    for movie in all_movies_not_rated:
+    for movie in all_movies_not_rated[:30]:
         predict[movie] = predict_rating(user, movie)
+        
 
-    sorted_items = sorted(predict.items(), key=operator.itemgetter(1), reverse=True)
+    sorted_items = sorted(predict.items(), key=operator.itemgetter(1), reverse=False)
 
     return sorted_items[:6]
 
@@ -111,5 +116,3 @@ def collaborative_filtering(user):
 
 if __name__ == "__main__":
     print("Recommender Script")
-    recommender_list = collaborative_filtering(1)
-    print(recommender_list)
